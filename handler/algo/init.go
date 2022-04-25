@@ -9,6 +9,6 @@ import (
 func Init(r *mux.Router) {
 	r.HandleFunc("/gcd", giveGCD).
 		Methods(http.MethodGet)
-	r.HandleFunc("/gcd", giveGCD).
+	r.HandleFunc("/gcd", receiveGCD).
 		Methods(http.MethodPost)
 }

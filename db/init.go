@@ -80,3 +80,30 @@ func AddEntry(name string, struc interface{}) (string, error) {
 
 	return id, nil
 }
+
+func RemoveEntry(name string, idHex string) error {
+
+	// retrieve problem
+	storageMtx.RLock()
+	problem, ok := storage[name]
+	storageMtx.RUnlock()
+	if !ok {
+		return fmt.Errorf("invalid problem name: %s", name)
+	}
+
+	// parse hex id
+	id, err := strconv.ParseUint(idHex, 16, 64)
+	if err != nil {
+		return fmt.Errorf("invalid hex id: %s", idHex)
+	}
+
+	// delete entry
+	problem.mtx.RLock()
+	delete(problem.kv, id)
+	problem.mtx.RUnlock()
+	if !ok {
+		return fmt.Errorf("invalid entry id: %d", id)
+	}
+
+	return nil
+}
